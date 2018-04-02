@@ -25,6 +25,7 @@ class Profesor extends Persona{
             $retorno =  $retorno."<label><h4> - ".$dia."<h4>";
         }
 
+        
         return $retorno;
     }
 }
