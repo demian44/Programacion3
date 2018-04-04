@@ -26,6 +26,8 @@
         fwrite($archvo,$value);
     }
 
+    fclose($archvo);
+
     
 
     
