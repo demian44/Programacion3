@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-<form action="accion.php" method="POST">
+<form action="accion.php" method="POST"  enctype="multipart/form-data">
 
     <input type="text" name="name" value="Demian"> 
     <input type="text" name="surname" value="Boullon">
@@ -17,6 +17,7 @@
     <input type="submit" name="cargar" value="cargar">
     <input type="submit" name="cargar" value="modificar">
     <input type="submit" name="cargar" value="eliminar">
+    <input type="file" name="archivo" id="archivo">
     
 </form>
 </body>

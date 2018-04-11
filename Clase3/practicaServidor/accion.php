@@ -46,10 +46,29 @@
             $person->DeletePerson($nombreArchivo);
         break;
         case 'cargar':
+        
+        //var_dump($_FILES);
+        if($_FILES["archivo"]["error"]==0){   
+            $extencion = explode(".",$_FILES["archivo"]["name"]);
+            $exten = array_reverse($extencion);
+            $direcory = ("./image/".$_POST["name"].".".$exten[0]);
+            if(file_exists($direcory)){
+                copy($direcory,"./backup/".$_POST["name"].".".$exten[0]);
+                echo "existe";
+            }
+
+            unlink($direcory);
+
+            move_uploaded_file($_FILES["archivo"]["tmp_name"],"./image/".$_POST["name"].".".$exten[0]);
+            $nombreArchivo = $_POST["name"].".txt";
             $file = fopen($nombreArchivo,"a");  
-            $person = new Person($_POST["name"],$_POST["surname"],$_POST["age"],$_POST["file"]);
-            fwrite($file,$person);
+            $person = new Person($_POST["name"],$_POST["surname"],$_POST["age"],$_POST["file"],"./image/".$_POST["name"].".".$exten[0]);
+            fwrite($file,PHP_EOL.$person);
+            
             fclose($file);
+        }
+        else 
+        echo "no cargo la persona";
 
             break;
     }
@@ -62,3 +81,83 @@
 
     
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

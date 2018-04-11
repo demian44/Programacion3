@@ -5,17 +5,19 @@
         public $surname;
         public $age;
         public $file;
-		function __construct($name, $surname,$age,$file)
+        public $photo;
+		function __construct($name, $surname,$age,$file,$photo)
     	{
             $this->name = $name;
             $this->surname = $surname;
             $this->age = $age;            
             $this->file = $file;
+            $this->photo = $photo;
         }
         
         function __toString()
         {
-            return "$this->name-$this->surname-$this->age-$this->file";
+            return "$this->name-$this->surname-$this->age-$this->file-$this->photo";
         }
 
         public function GetFile()
@@ -50,8 +52,10 @@
                 
                 $userData = explode("-",$linea);
                 var_dump($userData);
-                $personInList = new Person($userData[0],$userData[1],$userData[2],$userData[3]);
-                array_push($personList,$personInList);
+                if($userData[3]!="1"){
+                    $personInList = new Person($userData[0],$userData[1],$userData[2],$userData[3]);
+                    array_push($personList,$personInList);
+                }
             }
             fclose($file);
             $file = fopen($nombreArchivo,"w");  
