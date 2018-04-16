@@ -126,9 +126,7 @@ class Person
 
     function Backup($file){
         $fileName = explode("/",$file);
-        echo "Filename: ";
-        echo($fileName[count($fileName)-1]);echo "<br>";
-        copy($file,$fileName[count($fileName)-1]);
+        copy($file,"./backup/".$fileName[count($fileName)-1]);
         unlink($this->file);
     }
 }
