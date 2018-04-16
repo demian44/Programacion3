@@ -8,10 +8,18 @@
 </head>
 <body>
     <form action="./accion.php" method="POST" enctype="multipart/form-data">
-        <input type="text" name="nombre" id="nombre">
-        <input type="text" name="id" id="id">
-        <input type="file" name="archivo" id="archivo">
-        <input type="submit" name="submit">
+        <label>Nombre</label><input type="text" name="nombre" id="nombre"><br>
+        <label>Apellido</label><input type="text" name="id" id="id"><br>
+        <label>Legajo</label><input type="file" name="archivo" id="archivo"><br>
+        <label>DNI</label><input type="file" name="dni" id="dni"><br>
+        <input type="submit" name="submit" value="agregar"><br>
+    </form>
+    <form action="./editar.php"  method="POST" enctype="multipart/form-data">
+        <label>Nombre</label><input type="text" name="nombre" id="nombre"><br>
+        <label>Apellido</label><input type="text" name="id" id="id"><br>
+        <label>Legajo</label><input type="file" name="archivo" id="archivo"><br>
+        <label>DNI</label><input type="file" name="dni" id="dni"><br>
+        <input type="submit" name="editar" value="modificar">
     </form>
 </body>
 </html>

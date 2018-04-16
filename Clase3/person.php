@@ -5,6 +5,7 @@
         public $surname;
         public $age;
         public $file;
+        
 		function __construct($name, $surname,$age,$file)
     	{
             $this->name = $name;
