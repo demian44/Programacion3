@@ -11,7 +11,10 @@ switch ($_POST["cargar"]) {
         $persona->editPerson("./Data/data.txt");
         break;
     case 'eliminar':
-        #code...
+        $persona->DeletePerson("./Data/data.txt");
+        break;
+        default: 
+            echo("<br>".$persona->ShowPersonArray());
         break;
 }
 

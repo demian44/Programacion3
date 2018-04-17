@@ -20,6 +20,10 @@
             return "$this->name-$this->surname-$this->age-$this->file-$this->photo";
         }
 
+        function ShowPersonArray($personArray){
+            
+        }
+
         public function GetFile()
         {
             return $this->file;
