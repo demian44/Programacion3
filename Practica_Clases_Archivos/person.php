@@ -20,9 +20,9 @@ class Person
         return "$this->name-$this->surname-$this->legajo-$this->dni-$this->file";
     }
     
-    public function ShowPersonArray()
+    public static function ShowPersonArray()
     {
-        $personArray = $this::leerArchivo("./Data/data.txt");
+        $personArray = Person::leerArchivo("./Data/data.txt");
         $stringPersonList = "";
         foreach ($personArray as $key => $person) {
             $stringPersonList .="-".$person."<br>--------------<br>";
@@ -31,7 +31,7 @@ class Person
         return $stringPersonList;
     }
 
-    public function leerArchivo($fileName)
+    public static function leerArchivo($fileName)
     {
         $file = fopen($fileName, "r");
         $personList = [];
@@ -101,6 +101,8 @@ class Person
         }
         if ($flagNoRepetido) {
             $this::SaveFile();
+            $db = new Db();
+            $db->addUser($this);
             $this::escribirArchivo($fileName);
         }
     }
@@ -132,7 +134,9 @@ class Person
             }
         }
         if ($isEdit) {
-            $this::sobreEscribirArchivo($fileName, $newPersonListEdited);
+            $db = new Db();
+            $db->editPerson($this);
+            //$this::sobreEscribirArchivo($fileName, $newPersonListEdited);
         }
     }
 
