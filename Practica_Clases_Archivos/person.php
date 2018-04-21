@@ -6,18 +6,19 @@ class Person
     public $legajo;
     public $dni;
     public $file;
-    public function __construct($name, $surname, $legajo, $dni)
+    public function __construct($name, $surname, $legajo, $dni, $id)
     {
         $this->name = $name;
         $this->surname = $surname;
         $this->legajo = $legajo;
         $this->dni = $dni;
         $this->file = "-";
-    }
+        $this->id = $id;
+        }
 
     public function __toString()
     {
-        return "$this->name-$this->surname-$this->legajo-$this->dni-$this->file";
+        return "$this->name-$this->surname-$this->legajo-$this->dni-$this->id-$this->file";
     }
     
     public static function ShowPersonArray()
@@ -39,9 +40,9 @@ class Person
         while (!feof($file)) {
             $persona = fgets($file);
             $arrayPersona = explode("-", $persona);
-            if (count($arrayPersona) == 5) {
-                $person = new Person($arrayPersona[0], $arrayPersona[1], $arrayPersona[2], $arrayPersona[3]);
-                $person->file = $arrayPersona[4];
+            if (count($arrayPersona) == 6) {
+                $person = new Person($arrayPersona[0], $arrayPersona[1], $arrayPersona[2], $arrayPersona[3],$arrayPersona[4]);
+                $person->file = $arrayPersona[5];
                 array_push($personList, $person);
             }
         }
@@ -79,7 +80,6 @@ class Person
      **/
     public function SaveFile()
     {
-
         if ($_FILES["photo"]["error"] == 0) {
             $type = explode("/", $_FILES["photo"]["type"]);
             $name = $this->name . "." . $type[1];
@@ -92,8 +92,10 @@ class Person
     public function addPerson($fileName)
     {
         $personList = $this->leerArchivo($fileName);
+        
         $flagNoRepetido = true;
-        foreach ($personList as $person) {
+       
+        foreach ($personList as $person) {            
             if ($person->legajo == $this->legajo) {
                 $flagNoRepetido = false;
                 break;
@@ -102,7 +104,8 @@ class Person
         if ($flagNoRepetido) {
             $this::SaveFile();
             $db = new Db();
-            $db->addUser($this);
+            var_dump($db);
+            $db->addUser($this);//
             $this::escribirArchivo($fileName);
         }
     }
