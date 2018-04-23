@@ -1,11 +1,14 @@
 <?php
 class Person
 {
+
     public $name;
     public $surname;
     public $legajo;
     public $dni;
     public $file;
+
+    /////////////CONSTRUCTOR//
     public function __construct($name, $surname, $legajo, $dni, $id)
     {
         $this->name = $name;
@@ -14,138 +17,150 @@ class Person
         $this->dni = $dni;
         $this->file = "-";
         $this->id = $id;
-        }
+    }
 
+    /////////////MÉTODOS MÁGICOS//
     public function __toString()
     {
         return "$this->name-$this->surname-$this->legajo-$this->dni-$this->id-$this->file";
     }
-    
+
+    /////////////MÉTODOS//
     public static function ShowPersonArray()
     {
-        $personArray = Person::leerArchivo("./Data/data.txt");
-        $stringPersonList = "";
-        foreach ($personArray as $key => $person) {
-            $stringPersonList .="-".$person."<br>--------------<br>";
+        $stringPersonList = "Error al leer el archivo";
+        $personList = [];
+        if (Person::ReadFile("./Data/data.txt", $personList)) {
+            $stringPersonList = "";
+            $string = "";
+            foreach ($personList as $key => $person) {
+                $arrayPersona = explode("-", $person);
+                //var_dump($arrayPersona);
+                $string = "Nombre: " . $arrayPersona[0] . "- Apellido: " . $arrayPersona[1] . "- DNI: " . $arrayPersona[2] .
+                    "ID: " . $arrayPersona[3] . "- Path foto: " . $arrayPersona[0];
+                $stringPersonList .= PHP_EOL . PHP_EOL . $string;
+            }
         }
 
         return $stringPersonList;
     }
 
-    public static function leerArchivo($fileName)
+    public static function ReadFile($fileName, &$personList)
     {
-        $file = fopen($fileName, "r");
         $personList = [];
-
-        while (!feof($file)) {
-            $persona = fgets($file);
-            $arrayPersona = explode("-", $persona);
-            if (count($arrayPersona) == 6) {
-                $person = new Person($arrayPersona[0], $arrayPersona[1], $arrayPersona[2], $arrayPersona[3],$arrayPersona[4]);
-                $person->file = $arrayPersona[5];
-                array_push($personList, $person);
+        $return = false;
+        if (FileManager::read($fileName, $file)) {
+            $return = true;
+            while (!feof($file)) {
+                $persona = fgets($file);
+                $arrayPersona = explode("-", $persona);
+                if (count($arrayPersona) == 6) {
+                    $person = new Person($arrayPersona[0], $arrayPersona[1], $arrayPersona[2], $arrayPersona[3], $arrayPersona[4]);
+                    $person->file = $arrayPersona[5];
+                    array_push($personList, $person);
+                }
             }
+            fclose($file);
         }
-        fclose($file);
-        return $personList;
+        return $return;
     }
 
-    public function escribirArchivo($fileName)
+    public function SaveDataOnFile($fileName, &$messege)
     {
+        $return = false;
         if ($this->file != "-") {
-            $file = fopen($fileName, "a");
             $stringPerson = $this;
-            echo "<br>".$stringPerson."<br>";
-            fwrite($file, PHP_EOL.$stringPerson);
-            fclose($file);
-        } else {
-            echo "no hay foto";
-        }
+            if (FileManager::writeLine($fileName, $stringPerson)) {
+                $return = true;
+            } else
+                $messege = "error al leer el archivo";
+        } else
+            $messege = "no hay foto";
+
+        return $return;
     }
 
     public function sobreEscribirArchivo($fileName, $arrayPersonas)
     {
-        $file = fopen($fileName, "w");
+        $stringToWritte = "";
         foreach ($arrayPersonas as $key => $persona) {
-            $stringPerson = PHP_EOL . $persona;
-            fwrite($file, $stringPerson);
+            $stringToWritte .= PHP_EOL . $persona;
         }
-        fclose($file);
+
+        if (strlen($stringToWritte) > 0) {
+            FileManager::WritteFile($fileName,$stringToWritte);
+        }
     }
 
-    /*
-    ["photo"]=> array(5) { ["name"]=> string(27) "Captura de pantalla (1).png"
-    ["type"]=> string(9) "image/png" ["tmp_name"]=> string(24) "C:\xampp\tmp\phpBC75.tmp"
-    ["error"]=> int(0) ["size"]=> int(905196) } } Damian.png
-     **/
     public function SaveFile()
     {
         if ($_FILES["photo"]["error"] == 0) {
             $type = explode("/", $_FILES["photo"]["type"]);
             $name = $this->name . "." . $type[1];
-            echo "$name";
             move_uploaded_file($_FILES["photo"]["tmp_name"], "./images/" . $name);
             $this->file = "./images/" . $name;
         }
     }
 
-    public function addPerson($fileName)
+    public function AddPerson($fileName, &$messege)
     {
-        $personList = $this->leerArchivo($fileName);
-        
-        $flagNoRepetido = true;
-       
-        foreach ($personList as $person) {            
-            if ($person->legajo == $this->legajo) {
-                $flagNoRepetido = false;
-                break;
+        $return = false;
+        $flagNoRepetido = false;
+        if ($this->ReadFile($fileName, $personList)) {
+            $flagNoRepetido = true;
+            foreach ($personList as $person) {
+                if ($person->legajo == $this->legajo) {
+                    $flagNoRepetido = false;
+                    break;
+                }
             }
         }
         if ($flagNoRepetido) {
             $this::SaveFile();
-            $db = new Db();
-            var_dump($db);
-            $db->addUser($this);//
-            $this::escribirArchivo($fileName);
-        }
+            $PersonDb = new PersonDb();
+            $PersonDb->AddUser($this);//
+            if ($this::SaveDataOnFile($fileName, $messege)) {
+                $return = true;
+            }
+        } else
+            $messege = "Ya existe el usuario";
+        return $return;
     }
 
-    public function editPerson($fileName)
+    public function EditPerson($fileName)
     {
-        $personList = $this->leerArchivo($fileName);
-        var_dump($personList);
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        $newPersonListEdited = [];
-        $isEdit = false;
-        foreach ($personList as $person) {
-            var_dump($person);
-            if ($person->legajo == $this->legajo) {
-                if ($this->file == "-") {
-                    $this->file = $person->file;
-                    echo " asdsd    $person->file";
-                    $this->Backup($person->file);
-                    $this::SaveFile();
+        $personList;
+
+        if ($this->ReadFile($fileName, $personList)) {
+            var_dump($personList);
+            $newPersonListEdited = [];
+            $isEdit = false;
+            foreach ($personList as $person) {
+                var_dump($person);
+                if ($person->legajo == $this->legajo) {
+                    if ($this->file == "-") {
+                        $this->file = $person->file;
+                        $this->Backup($person->file);
+                        $this::SaveFile();
+                    }
+                    array_push($newPersonListEdited, $this);
+                    $isEdit = true;
+                    break;
+                } else {
+                    array_push($newPersonListEdited, $person);
                 }
-                array_push($newPersonListEdited, $this);
-                $isEdit = true;
-                break;
-            } else {
-                array_push($newPersonListEdited, $person);
             }
-        }
-        if ($isEdit) {
-            $db = new Db();
-            $db->editPerson($this);
-            //$this::sobreEscribirArchivo($fileName, $newPersonListEdited);
+            if ($isEdit) {
+                $PersonDb = new PersonDb();
+                $PersonDb->EditPerson($this);
+                $this::sobreEscribirArchivo($fileName, $newPersonListEdited);
+            }
         }
     }
 
     public function DeletePerson($fileName)
     {
-        $personList = $this->leerArchivo($fileName);
+        $personList = $this->ReadFile($fileName);
         var_dump($personList);
         echo "<br>";
         echo "<br>";
@@ -157,8 +172,7 @@ class Person
             var_dump($person);
             if ($person->legajo != $this->legajo) {
                 array_push($newPersonListEdited, $person);
-            }
-            else 
+            } else
                 $this->Backup($person->file);
         }
         if ($isEdit) {
@@ -167,7 +181,7 @@ class Person
     }
 
     public function Backup($file)
-    {        
+    {
         $fileName = explode("/", $file);
         copy($file, "./backup/" . $fileName[count($fileName) - 1]);
         unlink($file);

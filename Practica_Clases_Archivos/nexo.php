@@ -2,26 +2,33 @@
 include "./person.php";
 include "./db.php";
 include "./personDb.php";
+include "./file.php";
 
-
+$messege = "";
 if (isset($_GET["accion"])) {
-        // $staingInfo = Person::ShowPersonArray();
+    $staingInfo = Person::ShowPersonArray();
         // echo "$staingInfo";
     $personDb = new PersonDb();
-    $person = $personDb->getUsers();
-    var_dump($person);
-    Person::ShowPersonArray($person);
+    //$person = $personDb->getUsers();
+    //var_dump($person);
+    //Person::ShowPersonArray($staingInfo);
+    echo "$staingInfo";
 } else if (isset($_POST["accion"])) {
-    $persona = new Person($_POST["name"], $_POST["surname"], $_POST["legajo"], $_POST["dni"],$_POST["id"]);
+    $persona = new Person($_POST["name"], $_POST["surname"], $_POST["legajo"], $_POST["dni"], $_POST["id"]);
         //var_dump($persona);
     switch ($_POST["accion"]) {
         case 'cargar':
-            $persona->addPerson("./Data/data.txt"); // Acá agrego la persona en un archivo
+            if(!$persona->AddPerson("./Data/data.txt", $messege)) // Acá agrego la persona en un archivo
+            {
+                echo "$messege";                
+            }
+            else 
+                echo "persona guardada correctamente";
             $personDb = new PersonDb();
-            $personDb->addUser($persona); // Acá agrego la persona en la base de detos
+            $personDb->AddUser($persona); // Acá agrego la persona en la base de detos
             break;
         case 'modificar':
-            $persona->editPerson("./Data/data.txt");
+            $persona->EditPerson("./Data/data.txt");
             break;
         case 'eliminar':
                     #code...

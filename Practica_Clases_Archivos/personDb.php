@@ -37,7 +37,7 @@ class PersonDb extends Db
         return $arrayPerson;
     }
 
-    public function addUser($person)
+    public function AddUser($person)
     {
         $exist = false;//Instancia
         if ($person->file != "-") {
@@ -58,7 +58,7 @@ class PersonDb extends Db
             //$query = $pdo->query("INSERt INTO `person`(`name`, `surname`, `legajo`, `dni`, `file`, `id`) VALUES ('De','asd',1,12,'asd',4)");
     }
 
-    public function editPerson($person)
+    public function EditPerson($person)
     {
         $pdo = self::connect();
         $query = $pdo->query("update person set name = '$person->name', surname = '$person->surname', legajo = $person->legajo, file = '$person->file',dni =  $person->dni, id= $person->id where dni = $person->dni");
