@@ -129,54 +129,53 @@ class Person
 
     public function EditPerson($fileName)
     {
-        $personList;
+        $personList = [];
 
         if ($this->ReadFile($fileName, $personList)) {
-            var_dump($personList);
-            $newPersonListEdited = [];
             $isEdit = false;
-            foreach ($personList as $person) {
-                var_dump($person);
+            foreach ($personList as $key => $person) {
                 if ($person->legajo == $this->legajo) {
                     if ($this->file == "-") {
                         $this->file = $person->file;
                         $this->Backup($person->file);
                         $this::SaveFile();
-                    }
-                    array_push($newPersonListEdited, $this);
+                    }                  
+                    unset($personList[$key]);
+                    array_push($personList, $this);
                     $isEdit = true;
                     break;
-                } else {
-                    array_push($newPersonListEdited, $person);
-                }
+                } 
             }
             if ($isEdit) {
                 $PersonDb = new PersonDb();
                 $PersonDb->EditPerson($this);
-                $this::sobreEscribirArchivo($fileName, $newPersonListEdited);
+                $this::sobreEscribirArchivo($fileName, $personList);
             }
         }
     }
 
-    public function DeletePerson($fileName)
+    public function Delete($fileName)
     {
-        $personList = $this->ReadFile($fileName);
-        var_dump($personList);
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        $newPersonListEdited = [];
-        $isEdit = false;
-        foreach ($personList as $person) {
-            var_dump($person);
-            if ($person->legajo != $this->legajo) {
-                array_push($newPersonListEdited, $person);
-            } else
-                $this->Backup($person->file);
-        }
-        if ($isEdit) {
-            $this::sobreEscribirArchivo($fileName, $newPersonListEdited);
+        $personList = [];
+
+        if ($this->ReadFile($fileName, $personList)) {
+            $isEdit = false;
+            foreach ($personList as $key => $person) {
+                if ($person->legajo == $this->legajo) {
+                    if ($this->file == "-") {
+                        $this->file = $person->file;
+                        $this->Backup($person->file);
+                    }                  
+                    unset($personList[$key]);
+                    $isEdit = true;
+                    break;
+                } 
+            }
+            if ($isEdit) {
+                $PersonDb = new PersonDb();
+                $PersonDb->Delete($this->legajo);
+                $this::sobreEscribirArchivo($fileName, $personList);
+            }
         }
     }
 

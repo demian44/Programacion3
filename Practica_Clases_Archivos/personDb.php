@@ -66,6 +66,13 @@ class PersonDb extends Db
         var_dump($resul);
     }
 
+    public function Delete($legajo)
+    {
+        $pdo = self::connect();
+        $query = $pdo->query("delete from person where legajo = $legajo");
+        $resul = $query->execute();
+        var_dump($resul);
+    }
 }
 
 

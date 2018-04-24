@@ -18,11 +18,10 @@ if (isset($_GET["accion"])) {
         //var_dump($persona);
     switch ($_POST["accion"]) {
         case 'cargar':
-            if(!$persona->AddPerson("./Data/data.txt", $messege)) // Acá agrego la persona en un archivo
+            if (!$persona->AddPerson("./Data/data.txt", $messege)) // Acá agrego la persona en un archivo
             {
-                echo "$messege";                
-            }
-            else 
+                echo "$messege";
+            } else
                 echo "persona guardada correctamente";
             $personDb = new PersonDb();
             $personDb->AddUser($persona); // Acá agrego la persona en la base de detos
@@ -31,7 +30,15 @@ if (isset($_GET["accion"])) {
             $persona->EditPerson("./Data/data.txt");
             break;
         case 'eliminar':
-                    #code...
+            $persona->Delete("./Data/data.txt");
+            break;
+        case 'prueba':
+            $array = [1, 2, 3, 4];
+            var_dump($array);
+            unset($array[0]);
+            foreach ($array as $key => $value) {
+                echo "Key = $key --- Value= $value";
+            }
             break;
     }
 }

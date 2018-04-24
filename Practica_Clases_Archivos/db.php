@@ -10,6 +10,7 @@ abstract class Db
         return $pdo;
     }
 
+
         #este constructor le dará la información para conectarse a la base de datos.
     public abstract function __construct();
 
