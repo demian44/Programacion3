@@ -55,7 +55,6 @@ class PersonDb extends Db
                 $query = $pdo->query("insert into person (name, surname, legajo, dni, id,file) values ('$person->name','$person->surname',$person->legajo,$person->dni,$person->id,'$person->file')");
             }
         }
-            //$query = $pdo->query("INSERt INTO `person`(`name`, `surname`, `legajo`, `dni`, `file`, `id`) VALUES ('De','asd',1,12,'asd',4)");
     }
 
     public function EditPerson($person)

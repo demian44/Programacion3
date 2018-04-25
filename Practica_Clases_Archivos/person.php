@@ -104,8 +104,8 @@ class Person
 
     public function AddPerson($fileName, &$messege)
     {
-        $return = false;
-        $flagNoRepetido = false;
+        $return = false; #d
+        $flagNoRepetido = false;  #d
         if ($this->ReadFile($fileName, $personList)) {
             $flagNoRepetido = true;
             foreach ($personList as $person) {
@@ -118,7 +118,7 @@ class Person
         if ($flagNoRepetido) {
             $this::SaveFile();
             $PersonDb = new PersonDb();
-            $PersonDb->AddUser($this);//
+            $PersonDb->AddUser($this); 
             if ($this::SaveDataOnFile($fileName, $messege)) {
                 $return = true;
             }
