@@ -1,5 +1,5 @@
 <?php
-class FileManager
+class ManejadorArchivos
 {
     public static function read($fileName, &$file)
     {
