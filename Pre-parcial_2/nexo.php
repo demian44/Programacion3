@@ -1,5 +1,5 @@
 <?php
-include "./file.php";
+require "./file.php";
 include "./entidades/vendedor.php";
 include "./entidades/IVendible.php";
 include "./entidades/helado.php";
@@ -20,7 +20,6 @@ if (isset($_GET["accion"])) {
             break;
 
         case 'HacerTabla':
-            echo "Hacer tabla";
             Helado_::HacerTabla();
             break;
 
@@ -40,14 +39,24 @@ if (isset($_GET["accion"])) {
 } else if (isset($_POST["accion"])) {
     switch ($_POST["accion"]) {
         case 'cargar':
-            if (isset($_POST["nombre"]) && isset($_POST["clave"]) && isset($_POST["fecha"])&& isset($_FILES["foto"]) ) {
-                $vendedor = new Vendedor($_POST["nombre"], $_POST["clave"], $_POST["fecha"]);
-                if($vendedor->GuardarEnArchivo())
+            if (isset($_POST["nombre"]) && isset($_POST["clave"]) && isset($_POST["fecha"]) && isset($_FILES["foto"])) {
+                $vendedor = new Vendedor($_POST["nombre"], $_POST["fecha"], $_POST["clave"]);
+                if ($vendedor->GuardarEnArchivo())
                     echo "Vendedor guardado exitosamente";
-                else 
+                else
                     echo "Error al guardar al usuario";
-            }
-            else
+            } else
+                echo "Faltan completar campos.";
+
+            break;
+        case 'modificarVendedor':
+            if (isset($_POST["nombre"]) && isset($_POST["clave"]) && isset($_POST["fecha"])) {
+                $vendedor = new Vendedor($_POST["nombre"], $_POST["fecha"], $_POST["clave"]);
+                if ($vendedor->Modificar())
+                    echo "Vendedor guardado exitosamente";
+                else
+                    echo "Error al guardar al usuario";
+            } else
                 echo "Faltan completar campos.";
 
             break;
@@ -78,9 +87,14 @@ if (isset($_GET["accion"])) {
                 $helado->ModificarHelado();
             }
             break;
+        case "host":
+            $host = gethostname();
+            var_dump($_SERVER['HTTP_HOST']);
+            echo "<br>";
+            var_dump($_SERVER['PHP_SELF']);
+            break;
     }
-}
-else 
+} else
     echo "Sólo se admite método Get y Post";
 
 ?>

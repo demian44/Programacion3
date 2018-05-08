@@ -90,14 +90,18 @@ class Helado_ implements IVendible_
     public static function HacerTabla()
     {
         $helados;
-        echo "entró";
         self::TraerHelados($helados);
         $tabla = "<table border=1><thead><tr><th>Sabor</th><th>Precio</th><th>Foto</th></tr></thead><tbody>";
         foreach ($helados as $key => $helado) {
             $fotoArray = explode("/", trim($helado->foto));
             $foto = $fotoArray[count($fotoArray) - 1];
+            $fotoArray = explode("/", trim($helado->foto));
+            $foto = $fotoArray[count($fotoArray) - 1];
+            $host  = $_SERVER['HTTP_HOST'];
+            $uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+            $base = "http://" . $host . $uri . "/";
             $tabla .= "<tr><td>$helado->sabor</td><td>$helado->precio</td><td><img 
-            src='http://localhost:8080/Programacion3/Pre-parcial_2/heladosImagen/$foto'
+            src='$base"."heladosImagen/$foto'
             style='height:150px;' srcset=''></td></tr>";
         }
         $tabla .= "</tbody></table>";
