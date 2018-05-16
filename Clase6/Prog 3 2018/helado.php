@@ -7,18 +7,18 @@ class Helado
 
     public function MostrarDatos()
     {
-        return $this->sabor . " - " . $this->precio . " - " . $this->sexo;
+        return $this->sabor . " - " . $this->precio . " - " . $this->tipo;
     }
 
-    public static function TraerClienteNacionalidadSexoArray($precio, $sexo)
+    public static function TraerClienteNacionalidadSexoArray($sabor, $tipo)
     {
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 
         $consulta = $objetoAccesoDato->RetornarConsulta("SELECT sabor, precio, "
-            . "sexo FROM clientes WHERE precio = :precio "
-            . "AND sexo= :sexo");
+            . "tipo FROM helados WHERE sabor = :sabor"
+            . "AND tipo= :tipo");
 
-        $consulta->execute(array(":precio" => $precio, ":sexo" => $sexo));
+        $consulta->execute(array(":sabor" => $sabor, ":tipo" => $tipo));
         $array = [];
         foreach($consulta->fetchAll() as  $row) {
             array_push($array,$row);
@@ -33,27 +33,26 @@ class Helado
 
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 
-        $consulta = $objetoAccesoDato->RetornarConsulta("INSERT INTO clientes (sabor, precio, sexo)"
-            . "VALUES(:sabor, :cantante, :sexo)");
+        $consulta = $objetoAccesoDato->RetornarConsulta("INSERT INTO clientes (sabor, precio, tipo)"
+            . "VALUES(:sabor, :cantante, :tipo)");
 
         $consulta->bindValue(':sabor', $this->sabor, PDO::PARAM_STR);
         $consulta->bindValue(':cantante', $this->precio, PDO::PARAM_STR);
-        $consulta->bindValue(':sexo', $this->sexo, PDO::PARAM_STR);
+        $consulta->bindValue(':tipo', $this->tipo, PDO::PARAM_STR);
         $consulta->execute();
-
     }
 
-    public static function ModificarCliente($id, $sabor, $sexo, $cantante)
+    public static function ModificarCliente($id, $sabor, $tipo, $cantante)
     {
 
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
 
         $consulta = $objetoAccesoDato->RetornarConsulta("UPDATE cds SET titel = :sabor, interpret = :cantante, 
-                                                        jahr = :sexo WHERE id = :id");
+                                                        jahr = :tipo WHERE id = :id");
 
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
         $consulta->bindValue(':sabor', $sabor, PDO::PARAM_INT);
-        $consulta->bindValue(':sexo', $sexo, PDO::PARAM_INT);
+        $consulta->bindValue(':tipo', $tipo, PDO::PARAM_INT);
         $consulta->bindValue(':cantante', $cantante, PDO::PARAM_STR);
 
         return $consulta->execute();
