@@ -32,32 +32,30 @@ if (isset($_GET["accion"])) {
             break;
     }
 
-} 
-if (isset($_POST["accion"])) {  
+}
+if (isset($_POST["accion"])) {
     switch ($_POST["accion"]) {
+        case 'traer':
+            if (isset($_POST["nacionalidad"]) && isset($_POST["sexo"])) {
+                $cliente = new Cliente();
+                $cliente->nacionalidad = $_POST["nacionalidad"];
+                $cliente->sexo = $_POST["sexo"];
+               // $cliente->InsertarElClienteParametros();
+                $array = $cliente->TraerClienteNacionalidadSexoArray($_POST["nacionalidad"], $_POST["sexo"]);
+                var_dump($array);
+            } else
+                echo "No entró";
+            break;
         case 'cargar':
             if (isset($_POST["nombre"]) && isset($_POST["nacionalidad"]) && isset($_POST["sexo"])) {
                 $cliente = new Cliente();
                 $cliente->nombre = $_POST["nombre"];
-                $cliente->nacionalidad =  $_POST["nacionalidad"];
-                $cliente->sexo  = $_POST["sexo"];
-               // $cliente->InsertarElClienteParametros();
-                $array = $cliente->TraerClienteNacionalidadSexoArray($_POST["nacionalidad"],$_POST["sexo"]);
-                var_dump($array);
-            }
-            else
-            echo "No entró";
-            break;
-        case 'modificarVendedor':
-            if (isset($_POST["nombre"]) && isset($_POST["clave"]) && isset($_POST["fecha"])) {
-                $vendedor = new Vendedor($_POST["nombre"], $_POST["fecha"], $_POST["clave"]);
-                if ($vendedor->Modificar())
-                    echo "Vendedor guardado exitosamente";
-                else
-                    echo "Error al guardar al usuario";
+                $cliente->nacionalidad = $_POST["nacionalidad"];
+                $cliente->sexo = $_POST["sexo"];
+           // $cliente->InsertarElClienteParametros();
+               $cliente->InsertarElClienteParametros();
             } else
-                echo "Faltan completar campos.";
-
+                echo "No entró";
             break;
         case 'validar':
             $nombre = "";
